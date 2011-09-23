@@ -1,6 +1,9 @@
 plot/*.png
 plot/*.pdf
 plot/*.eps
+*.rndm
+.sconsign.dblite
+*.log
 *.pyc
 *.o
 *.d

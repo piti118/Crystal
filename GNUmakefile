@@ -13,7 +13,7 @@ TOPDIR = $(shell pwd)
 #on somesystem there is no -mt
 BOOSTLIB := -L$(BOOSTDIR)/lib -lboost_thread-mt -lboost_filesystem-mt -lboost_program_options-mt -lboost_system-mt
 CPPFLAGS  += -Ivendor/yaml-cpp/include \
-	-Ivendor/mongo-cxx-driver-v2.0/include -D__TOP_DIR__="$(TOPDIR)"
+	-Ivendor/mongo-cxx-driver-v2.0/include -D__TOP_DIR__=\"$(TOPDIR)\"
 EXTRALIBS += -Lvendor/yaml-cpp/lib -lyaml-cpp \
 	-Lvendor/mongo-cxx-driver-v2.0/lib -lmongoclient \
 	$(BOOSTLIB)

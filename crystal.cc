@@ -17,12 +17,12 @@
 #ifdef G4UI_USE
 #include "G4UIExecutive.hh"
 #endif
+#include <iostream>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 int main(int argc,char** argv)
 {
-
   // Choose the Random engine
   //
   //CLHEP::HepRandom::setTheEngine(new CLHEP::RanecuEngine);
@@ -88,7 +88,7 @@ int main(int argc,char** argv)
 #ifdef G4UI_USE
       G4UIExecutive* ui = new G4UIExecutive(argc, argv);
 #ifdef G4VIS_USE
-      UImanager->ApplyCommand("/control/execute __TOP_DIR__/macro/vis.mac"); 
+      UImanager->ApplyCommand("/control/execute " __TOP_DIR__ "/macro/vis.mac"); 
 #endif
       if (ui->IsGUI())
 	UImanager->ApplyCommand("/control/execute gui.mac");

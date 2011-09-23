@@ -100,6 +100,8 @@
 #include <boost/thread/xtime.hpp>
 #undef assert
 #define assert MONGO_assert
+#pragma push_macro("VERSION")
+#undef VERSION
 
 namespace mongo {
 
@@ -113,7 +115,8 @@ namespace mongo {
 #endif
 
     // pdfile versions
-    const int VERSIONS = 4;
+    const int VERSION = 4;
+
     const int VERSION_MINOR = 5;
 
     enum ExitCode {
@@ -133,7 +136,7 @@ namespace mongo {
         EXIT_NET_ERROR = 48 ,
         EXIT_POSSIBLE_CORRUPTION = 60 , // this means we detected a possible corruption situation, like a buf overflow
         EXIT_UNCAUGHT = 100 , // top level exception that wasn't caught
-        EXIT_TEST = 101 
+        EXIT_TEST = 101 ,
 
     };
 
@@ -179,5 +182,5 @@ namespace mongo {
     void doPreServerStatupInits();
 
 } // namespace mongo
-
+#pragma pop_macro("VERSION")
 #endif // MONGO_PCH_H
