@@ -1,0 +1,11 @@
+plot/*.png
+plot/*.pdf
+plot/*.eps
+*.pyc
+*.o
+*.d
+*.a
+tmp/*
+!tmp/.emptyfile
+bin/*
+!bin/.emptyfile
