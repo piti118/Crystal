@@ -42,10 +42,12 @@ class Stat:
     self.var = self.sqmean-self.mean**2
     self.sd = sqrt(self.var)
     self.res = self.sd/self.mean if self.mean!=0 else -1
+  def tomap(self):
+    return self.__dict__
   
   @staticmethod
   def statmap(n,s,s2):
-    return Stat(n,s,s2).__dict__;
+    return Stat(n,s,s2).__dict__
 
 def logPosition(calor,r=1):
   numrow = 5
@@ -77,7 +79,7 @@ def teadd(x,y):#tuple of tutple elementwise add
   if x is None: x = (None,)*len(y)
   return tuple(eadd(a,b) for (a,b) in izip(x,y))
 
-def deadd(x,y):#dictionary elementwise add
+def deadd(x,y):#dictionary elementwise add of tuple
   if x is None: x = dict( (key,None) for key in y.keys())
   return dict( (key,eadd(x[key],y[key]) ) for key in y.keys() )
 
@@ -95,7 +97,9 @@ def stat(it):
   (n,s,s2) = reduce(lambda x,y: eadd(x,(1,y,y**2)), it, None)
   o = Stat(n,s,s2)
   return o
-    
+def statmap(it):
+  return stat(it).tomap()
+
 def linearPosition(calor,r=1):
   fcalors =centerFilter(calor,r)
   #print [(x['row'],x['col']) for x in fcalors]
