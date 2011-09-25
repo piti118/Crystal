@@ -7,7 +7,7 @@ Installation:
 Read note on make.
 
 source yourgeant4env.sh
-make vendor #only need to be done once this takes sometime to make the vendor library
+make vendor #Making vendor static library. This only need to be done once. This will take a while so be patience.
 make
 
 Note on make:
