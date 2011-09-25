@@ -14,5 +14,5 @@ Note on make:
 1) By default Geant4 make system forces the use of -pedantic which is not compatible with libmongo headers.
 I removed the -pedantic in $G4INSTALL/config/sys/yoursystem.gmk to make it work
 
-2) on some system boost library is doesn't have mt at the end and AFAIK there is no package config for that so.. if it doesn't link missing some boost symbol just remove all the -mt in GNUMakefile
+2) on some system boost library doesn't have mt at the end and AFAIK there is no package config for boost so.. if it doesn't link missing some boost symbol just remove all the -mt in GNUMakefile
 
