@@ -2,6 +2,8 @@ plot/*.png
 plot/*.pdf
 plot/*.eps
 plot/*.gif
+*.pdf
+*.eps
 *.rndm
 .sconsign.dblite
 *.log

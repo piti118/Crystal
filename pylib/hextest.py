@@ -31,7 +31,8 @@ def lk2xy(lk):
   return (x,y)
 def main():
   master = Tk()
-  w = Canvas(master, width=600, height=600)
+  wsize = 1000
+  w = Canvas(master, width=wsize, height=wsize)
   w.pack()
   #createhex(w,50,(300,300))
   #ring 1
@@ -47,7 +48,8 @@ def main():
   #generate set of vector
   ringvec = []
   center = (0,0)
-  for iring in xrange(4):
+  numring = 100
+  for iring in xrange(numring):
     if iring==0:
       ringvec.append([center])
       continue
@@ -61,16 +63,20 @@ def main():
         prevcenter = thiscenter
     ringvec.append(veclist)
   
-  size = 25; gap =5
+  size = 20; gap =1
   r = 2*size+gap
   iring = 0
-  pprint(ringvec)
+  #pprint(ringvec)
   for clist in ringvec:
     for center in clist:
-      center = tuple(r*x+300 for x in lk2xy(center))
-      createhex(w,size,center,fill=color[iring])
+      #print w.winfo_width()
+      center = tuple(r*x+wsize/2 for x in lk2xy(center))
+      createhex(w,size,center,fill=color[iring%len(color)])
     iring=iring+1
-  mainloop()
+  w.update()
+  w.postscript(file="circles.eps")
+  
+  #mainloop()
   
 
 if __name__ == '__main__':
