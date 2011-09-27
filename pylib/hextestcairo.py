@@ -67,14 +67,20 @@ def main():
   hexsize = 50;gap = 3
   r = 2*hexsize+gap
   
-  color = [tuple([1-x*0.01])*3 for x in xrange(10)]
+  color = [tuple([1-x*0.02])*3 for x in xrange(10)]
   iring = 0
   for clist in hlist:
     for c in clist:
       newc = tuple((r*x)+cx for x,cx in zip(lk2xy(c),center))
-      print newc
+      #print newc
       drawhex(ctx,newc,hexsize,color=color[iring%len(color)])
     iring=iring+1
+  
+  #draw circles
+  for i in xrange(100):
+    ctx.set_source_rgb(1.0,0,0)
+    ctx.arc(center[0],center[1],1*r*i,0,2*math.pi)
+    ctx.stroke()
   surface.finish()
   
 if __name__ == '__main__':
