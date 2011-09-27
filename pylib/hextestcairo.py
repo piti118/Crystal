@@ -83,12 +83,12 @@ def lk2xy(lk):
   y = (l-k)*math.sin(math.pi/3)
   return (x,y)
 
-def dohex(cornerreq=4,output='hex'):
+def dohex(cornerreq=4,output='hex',innerradius =36*unit.cm,outterradius=60*unit.cm,crystalradius=1.5*unit.cm):
   numring = 30
   ssize = 6200
-  #surface = cairo.PDFSurface(output+'.pdf',ssize,ssize)
-  surface = cairo.PSSurface(output+'.eps',ssize,ssize)
-  surface.set_eps(True)
+  surface = cairo.PDFSurface(output+'.pdf',ssize,ssize)
+  #surface = cairo.PSSurface(output+'.eps',ssize,ssize)
+  #surface.set_eps(True)
   #surface = cairo.SVGSurface(output+'.svg',ssize,ssize)
   ctx = cairo.Context(surface)
   
@@ -139,6 +139,14 @@ def dohex(cornerreq=4,output='hex'):
   surface.finish()
 
 def main():
+  innerradius = 36*unit.cm
+  smallouterradius = 60*unit.cm
+  bigoutterradius = 70*unit.cm
+  
+  crystalwidthinner = 1.5*unit.cm
+  crystalwidtharea = 3.22/2*unit.cm
+  crystalwidthouter = 1.5*math.cos(math.pi/6) 
+  
   for i in range(6):
     dohex(i+1,'hex-'+str(i)) 
 
