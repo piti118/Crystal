@@ -116,7 +116,6 @@ namespace mongo {
 
     // pdfile versions
     const int VERSION = 4;
-
     const int VERSION_MINOR = 5;
 
     enum ExitCode {
