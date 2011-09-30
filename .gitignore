@@ -2,6 +2,7 @@ plot/*.png
 plot/*.pdf
 plot/*.eps
 plot/*.gif
+*.zip
 *.pdf
 *.eps
 *.rndm
