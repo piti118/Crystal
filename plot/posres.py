@@ -15,7 +15,7 @@ db = pymongo.Connection().crystal
 
 summaries = db.summary.find(sort=[('angle',1)])
 t = ((x['x3x3']['mean'],x['angle']) for x in summaries)
-fig, ax = plotapp.radplot(t=t,label='x 3x3 linear',title='Mean Shift(cm)',subplot=121)
+fig, ax = plotapp.radplot(t=t,label='x 3x3 linear',title='Mean Shift(cm)',subplot=121,width=14,height=7)
 summaries = db.summary.find(sort=[('angle',1)])
 t = ((x['y3x3']['mean'],x['angle']) for x in summaries)
 plotapp.radplot(t=t,fig=fig,ax=ax,label='y 3x3 linear',ls='--')
