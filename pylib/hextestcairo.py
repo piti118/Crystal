@@ -100,7 +100,7 @@ def dohex(cornerreq=4,output='hex',innerradius =36*unit.cm,outterradius=60*unit.
   color = [tuple([1-(x+1)*0.02])*3 for x in xrange(10)]
   iring = 0
   innerradius = 36*unit.cm
-  outerradius = 60*unit.cm
+  outerradius = 70*unit.cm
   
   numcrys = 0
   
@@ -109,8 +109,8 @@ def dohex(cornerreq=4,output='hex',innerradius =36*unit.cm,outterradius=60*unit.
 
       newc = tuple((r*x)+cx for x,cx in zip(lk2xy(c),center))
 
-      thiscolor = (0.86,0.86,0.86) if iring%2==0 else (1,1,1)
-      thiscolor = (0.74,0.74,0.74) if iring%10==0 else thiscolor
+      thiscolor = (0,0.86,0) if iring%2==0 else (0,1,0)
+      thiscolor = (0,0.74,0) if iring%10==0 else thiscolor
 
       #print newc
       corners = hexcorners(newc,hexsize)
@@ -148,7 +148,7 @@ def main():
   crystalwidthouter = 1.5*math.cos(math.pi/6) 
   
   for i in range(6):
-    dohex(i+1,'hex-'+str(i)) 
+    dohex(i+1,'hexbig-'+str(i)) 
 
 if __name__ == '__main__':
   main()
