@@ -1,37 +1,3 @@
-//
-// ********************************************************************
-// * License and Disclaimer                                           *
-// *                                                                  *
-// * The  Geant4 software  is  copyright of the Copyright Holders  of *
-// * the Geant4 Collaboration.  It is provided  under  the terms  and *
-// * conditions of the Geant4 Software License,  included in the file *
-// * LICENSE and available at  http://cern.ch/geant4/license .  These *
-// * include a list of copyright holders.                             *
-// *                                                                  *
-// * Neither the authors of this software system, nor their employing *
-// * institutes,nor the agencies providing financial support for this *
-// * work  make  any representation or  warranty, express or implied, *
-// * regarding  this  software system or assume any liability for its *
-// * use.  Please see the license in the file  LICENSE  and URL above *
-// * for the full disclaimer and the limitation of liability.         *
-// *                                                                  *
-// * This  code  implementation is the result of  the  scientific and *
-// * technical work of the GEANT4 collaboration.                      *
-// * By using,  copying,  modifying or  distributing the software (or *
-// * any work based  on the software)  you  agree  to acknowledge its *
-// * use  in  resulting  scientific  publications,  and indicate your *
-// * acceptance of all terms of the Geant4 Software license.          *
-// ********************************************************************
-//
-//
-// $Id: HexDetector.cc,v 1.1 2010-10-18 15:56:17 maire Exp $
-// GEANT4 tag $Name: geant4-09-04-patch-02 $
-//
-// 
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 #include "HexDetector.hh"
 
 #include "G4Material.hh"
@@ -54,9 +20,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
+#include "G4Polyhedra.hh"
+#include <cmath>
 HexDetector::HexDetector():
   LYSO(0),Air(0),world_box(0),world_log(0),world_pv(0),
   calor_box(),calor_log(),calor_pv()
@@ -65,13 +30,9 @@ HexDetector::HexDetector():
   //and do nothing...
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 HexDetector::~HexDetector(){ 
     //do nothing
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4VPhysicalVolume* HexDetector::Construct()
 {
@@ -100,8 +61,6 @@ void HexDetector::DefineMaterials()
   
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 G4VPhysicalVolume* HexDetector::ConstructCalorimeter()
 {
   using std::string;
@@ -124,18 +83,10 @@ G4VPhysicalVolume* HexDetector::ConstructCalorimeter()
   G4double padding_x = 0.1*mm;
   G4double padding_y = 0.1*mm;
   G4double padding_z = 0.1*mm;
-  
-  G4double total_crystal_x = (numrow*crystal_x + (numrow-1)*gap_x);
-  G4double total_crystal_y = (numcol*crystal_y + (numcol-1)*gap_y);
-  
-  G4double crystal_origin_x = -total_crystal_x/2 + crystal_x/2 + offset_x;
-  G4double crystal_origin_y = -total_crystal_y/2 + crystal_y/2 + offset_y;
-  G4double crystal_origin_z = crystal_z/2 + offset_z;
-  
-  G4double worldsize_x = total_crystal_x+2*padding_x;
-  G4double worldsize_y = total_crystal_y+2*padding_y;
-  G4double worldsize_z = 2*crystal_z + 2*padding_z;
-  
+  G4double worldsize_x = 1000*mm;
+  G4double worldsize_y = 1000*mm;
+  G4double worldsize_z = 1000*mm;
+  double pi =  std::atan(1)*4;
   world_box = new G4Box("world_box",worldsize_x/2,worldsize_y/2,worldsize_z/2);
   world_log = new G4LogicalVolume(world_box,Air,"world_log");
   //world_log->SetVisAttributes (G4VisAttributes::Invisible);
@@ -149,32 +100,40 @@ G4VPhysicalVolume* HexDetector::ConstructCalorimeter()
       0); //copy number
    
   //numbering system for hexagonal placement is 
-  //ring number and crystal number
-  //ring number start from 0 at the central ring
-  //crystal starts from 0 at the on with lowest theta
-  //measured from x axis counter clockwise from the center of (0,0)hexagonal to the 
-  //center hexagon in question
+  //identify by ring number and crystal number
+  //the crystal number start at 0 from (ringnumber,0)
+  //in lk coordinate (arrange so that the tip of the hex point upward)
+  //l is vector to the next top right
+  //k is vector to the next lower right 
   
   for(unsigned int iring=0;iring<numring;iring++){
-    numsegment = 6*iring;
+    unsigned int numsegment = 6*iring;
   
-
+    G4double zplanes[2];
+    zplanes[0]=0*cm;zplanes[1]=13*cm;
+    G4double rinner[2];
+    rinner[0]=0*cm;rinner[1]=0*cm;
+    G4double router[2];
+    router[0]=3*cm;router[1]=3*cm;
+    G4double thisx=0;
+    G4double thisy=0;
+    G4double thisz=0;
     for(unsigned int iseg=0;iseg<numsegment;iseg++){
       char temp[100];
       sprintf(temp,"crystal_%d_%d",iring,iseg);
-      string thisname(temp):
-      G4Polyhedra* thishex = new Polyhedra(
+      string thisname(temp);
+      G4Polyhedra* thishex = new G4Polyhedra(
           thisname.c_str(),
-          0,2*Pi, // phistart, totalphi
+          0,2*pi, // phistart, totalphi
           6,//numside
           2,//numzplane
-          {0*cm,13*cm},//zplanes
-          {0*cm,0*cm},//rinner
-          {3*cm,3*cm}//router
+          zplanes,
+          rinner,
+          router
         );
         
-        G4LogicalVolume* thislog = new G4LogicalVoluem(thishex,LYSO,(thisname+"_log").c_str())
-        G4VPlacement* thispv = new G4PVPlacement(
+      G4LogicalVolume* thislog = new G4LogicalVolume(thishex,LYSO,(thisname+"_log").c_str());
+      G4PVPlacement* thispv = new G4PVPlacement(
           0,
           G4ThreeVector(thisx,thisy,thisz),
           thislog,
@@ -182,7 +141,7 @@ G4VPhysicalVolume* HexDetector::ConstructCalorimeter()
           world_log,
           false,
           calorIndex(iring,iseg)
-        )
+          );
     }
   }
    

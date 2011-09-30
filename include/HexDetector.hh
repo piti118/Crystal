@@ -58,22 +58,16 @@ class HexDetector : public G4VUserDetectorConstruction
   public:
      
     G4VPhysicalVolume* Construct();
-    static inline unsigned int calorIndex(unsigned int iring, unsigned iseg){return offset+iring*1000+iseg;}
+    static inline unsigned int calorIndex(unsigned int iring, unsigned iseg){return 1000;}
     static inline std::vector<int> calorIdList(){
       std::vector<int> toReturn;
-      for(unsigned int iring=0;iring<numring,iring++){
-        for(unsigned int iseg=0;iseg<numseg;iseg++){
-          toReturn.push_back(calorIndex(iring,iseg));
-        }
-      }
       return toReturn;
     }
-    static inline unsigned int calorRing(int id){return (id-idoffset)/numcol;}
-    static inline unsigned int calorSeg(int id){return (id-idoffset)%numcol;}
+    static inline unsigned int calorRing(int id){return 0;}
+    static inline unsigned int calorSeg(int id){return 0;}
   private:
     
-    static const unsigned int numrow = 9;//make them both odd so one crystal is at the center
-    static const unsigned int numcol = 9;
+    static const unsigned int numring = 6;
     static const unsigned int idoffset = 10000;
     
     G4Material* LYSO;
