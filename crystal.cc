@@ -79,7 +79,7 @@ int main(int argc,char** argv)
     {
       for(int deg=0;deg<90;deg++){
         gen_action->SetAngle(deg);
-        runManager->BeamOn(10);
+        runManager->BeamOn(1000);
       }
       DEDXDatabase::save();
     }
