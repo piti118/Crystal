@@ -58,8 +58,12 @@ def centerFilter(calor,r=1):
   minirow = centerrow-r
   maxicol = centercol+r
   minicol = centercol-r
-  return filter(lambda x: minirow <= x['row'] <= maxirow and minicol <= x['col'] <= maxicol,calor)
-
+  def incenter(x):
+    toReturn = minirow <= x['row'] <= maxirow and minicol <= x['col'] <= maxicol
+    return toReturn
+  toReturn =  filter(incenter,calor.values())
+  return toReturn
+  
 def crystalR(row,col):
   nrow = centerrow-row;
   ncol = centercol-col;
@@ -102,7 +106,9 @@ def statmap(it):
 
 def linearPosition(calor,r=1):
   fcalors =centerFilter(calor,r)
-  #print [(x['row'],x['col']) for x in fcalors]
+  #print (len(fcalors),(2*r+1)**2)
+  assert len(fcalors) == (2*r+1)**2, "len should be equal"
+  
   totalE = sum(x['dedx'] for x in fcalors)
   wEx = sum(x['dedx']*crystalX(x['col']) for x in fcalors) 
   wEy = sum(x['dedx']*crystalY(x['row']) for x in fcalors)

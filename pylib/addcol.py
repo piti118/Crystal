@@ -3,7 +3,8 @@ import pymongo
 from math import sqrt
 def addcol():
   db = pymongo.Connection().crystal
-  col = db.crystal
+  col = db.raw
+  col.create_index('angle')
   idata = 0;
   for data in col.find(sort=[('angle', 1)]):
     linpos = util.linearPosition(data['dedx'],1)

@@ -6,7 +6,7 @@ import util
 
 def summarize():
   db = pymongo.Connection().crystal
-  coll = db.crystal
+  coll = db.raw
   coll.create_index('angle')
   angles = [i for i in coll.distinct('angle')]
   angles.sort()
@@ -16,7 +16,7 @@ def summarize():
     allData = coll.find({'angle':angle})
     evSums = (
       { 
-        'dedx':sum(x['dedx'] for x in data['dedx']),
+        'dedx':sum(x['dedx'] for x in data['dedx'].values()),
         'r3x3':data['r3x3'],
         'x3x3':data['x3x3'],
         'y3x3':data['y3x3'],
