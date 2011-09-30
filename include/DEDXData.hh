@@ -90,7 +90,7 @@ public:
       BSONObjBuilder calor;
       calor << "calorId" << calorId;
       calor << "row" << DetectorConstruction::calorRow(calorId);
-      calor << "col" << DetectorConstruction::calorRow(calorId);
+      calor << "col" << DetectorConstruction::calorCol(calorId);
       calor << "dedx" << thisDEDx/MeV;
       dedxlist << calor.obj();
     }
