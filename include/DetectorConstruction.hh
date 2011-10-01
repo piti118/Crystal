@@ -1,7 +1,7 @@
 #ifndef DetectorConstruction_h
 #define DetectorConstruction_h 1
 
-#include "G4VUserDetectorConstruction.hh"
+#include "Detector.hh"
 #include "globals.hh"
 #include <vector>
 #include <cstdlib>
@@ -13,9 +13,11 @@ class G4Material;
 class G4UniformMagField;
 class DetectorMessenger;
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+/**
+* This class represents array of square 3x3x13 cm crystal 
+**/
 
-class DetectorConstruction : public G4VUserDetectorConstruction
+class DetectorConstruction : public Detector
 {
   public:
   
