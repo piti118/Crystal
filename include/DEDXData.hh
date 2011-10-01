@@ -7,7 +7,7 @@
 #include <ostream>
 #include "DetectorConstruction.hh"
 #include "BSONInterface.hh"
-using namespace std;
+
 
 class DEDXData: public BSONInterface{
 public:
@@ -16,17 +16,17 @@ public:
   double angle;
   std::map<int, double> dedx;//map from calorid to dedx 
   virtual ~DEDXData(){}
-  void setup(int runno, int eventno, double angle, int minCalorId,int maxCalorId){
+  void setup(int runno, int eventno, double angle){
     this->runno = runno;
     this->eventno = eventno;
     this->angle = angle;
     dedx.clear();
-    for(int i=minCalorId; i<=maxCalorId; ++i){
-      dedx[i] = 0.;
-    }
   }
   
   void accumulate(int calorId,double dedxval){
+    if(dedx.find(calorId)==dedx.end()){
+      dedx[calorId]=0.;
+    }
     dedx[calorId]+=dedxval;
   }
   
@@ -86,7 +86,7 @@ public:
     c.dropCollection(ns);
     for(unsigned int i=0;i<data.size();++i){
       mongo::BSONObj obj = data[i].toBSON();
-      if(i%10000==0){cout << "Inserting "<< i << "/" << data.size() <<endl;}
+      if(i%10000==0){std::cout << "Inserting "<< i << "/" << data.size() <<std::endl;}
       c.insert(ns,obj);
     }
   }

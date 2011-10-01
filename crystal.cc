@@ -19,44 +19,37 @@
 #endif
 #include <iostream>
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 int main(int argc,char** argv)
 {
-  // Choose the Random engine
-  //
-  //CLHEP::HepRandom::setTheEngine(new CLHEP::RanecuEngine);
-  
-  // User Verbose output class
-  //
-  //G4VSteppingVerbose::SetInstance(new SteppingVerbose);
-     
-  // Construct the default run manager
-  //
-  G4RunManager * runManager = new G4RunManager;
+
+  G4RunManager * runManager = new G4RunManager();
 
   // Set mandatory initialization classes
   //
-  DetectorConstruction* detector = new DetectorConstruction;
+  DetectorConstruction* detector = new DetectorConstruction();
+  Simulation::getInstance()->detector = detector;
   runManager->SetUserInitialization(detector);
   // Physics list
-  PhysicsList* physics = new PhysicsList;
+  PhysicsList* physics = new PhysicsList();
   runManager->SetUserInitialization(physics);
     
   // Set user action classes
   //
-  PrimaryGeneratorAction* gen_action = 
-                          new PrimaryGeneratorAction(detector);
+  PrimaryGeneratorAction* gen_action = new PrimaryGeneratorAction();
+  Simulation::getInstance()->pgaction = gen_action;
   runManager->SetUserAction(gen_action);
+  
   //
   RunAction* run_action = new RunAction;  
+  Simulation::getInstance()->runaction = run_action;
   runManager->SetUserAction(run_action);
   //
-  EventAction* event_action = new EventAction(run_action,detector,gen_action);
+  EventAction* event_action = new EventAction();
+  Simulation::getInstance()->eventaction = event_action;
   runManager->SetUserAction(event_action);
   //
   SteppingAction* stepping_action =
-                    new SteppingAction(detector, event_action);
+                    new SteppingAction();
   runManager->SetUserAction(stepping_action);
   
   // Initialize G4 kernel
@@ -79,7 +72,7 @@ int main(int argc,char** argv)
     {
       for(int deg=0;deg<90;deg++){
         gen_action->SetAngle(deg);
-        runManager->BeamOn(1000);
+        runManager->BeamOn(10);
       }
       DEDXDatabase::save();
     }
@@ -108,5 +101,3 @@ int main(int argc,char** argv)
 
   return 0;
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....

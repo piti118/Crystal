@@ -14,7 +14,7 @@ class G4UniformMagField;
 class DetectorMessenger;
 
 /**
-* This class represents array of square 3x3x13 cm crystal 
+* This class represents array of square 3x3x13 cm crystal
 **/
 
 class DetectorConstruction : public Detector
@@ -34,7 +34,12 @@ class DetectorConstruction : public Detector
       return toReturn;
     }
     
+    virtual bool inDetector(int id){
+      return calorMinId() <= id && id <= calorMaxId();
+    }
+    
     static inline unsigned int calorIndex(unsigned int irow, unsigned icol){return irow*numcol+icol;}
+    //return inclusive limit
     static inline unsigned int calorMinId() {return idoffset+calorIndex(0,0);}
     static inline unsigned int calorMaxId(){return idoffset+calorIndex(numrow-1,numcol-1);}
     static inline unsigned int calorRow(int id){return (id-idoffset)/numcol;}

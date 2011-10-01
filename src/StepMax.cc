@@ -46,7 +46,7 @@ StepMax::~StepMax() {}
 
 G4bool StepMax::IsApplicable(const G4ParticleDefinition& particle)
 {
-  return true;
+  return false;
   //return (particle.GetPDGCharge() != 0. && !particle.IsShortLived());
 }
 

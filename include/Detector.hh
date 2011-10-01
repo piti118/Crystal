@@ -15,7 +15,10 @@ public:
   virtual bool touchableInDetector(const G4TouchableHandle& t){
     return inDetector(t->GetCopyNumber());
   }
-  
+  virtual G4ThreeVector randPos(){
+    G4ThreeVector toReturn(0,0,0);
+    return toReturn;
+  }
   //dump detector description to BSONObject
   virtual mongo::BSONObj toBSON(){
     using mongo::BSONObjBuilder;

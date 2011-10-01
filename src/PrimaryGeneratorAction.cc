@@ -10,9 +10,8 @@
 #include "Randomize.hh"
 #include <iostream>
 
-PrimaryGeneratorAction::PrimaryGeneratorAction(
-                                             DetectorConstruction* DC)
-:Detector(DC),rndmFlag("off")
+PrimaryGeneratorAction::PrimaryGeneratorAction()
+:rndmFlag("off")
 {
   G4int n_particle = 1;
   particleGun  = new G4ParticleGun(n_particle);
@@ -43,7 +42,7 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-  G4ThreeVector pos = Detector->randPos();
+  G4ThreeVector pos = Simulation::getInstance()->detector->randPos();
   //std::cout << pos.r()/cm << std::endl;
   particleGun->SetParticlePosition(pos);
   particleGun->GeneratePrimaryVertex(anEvent);

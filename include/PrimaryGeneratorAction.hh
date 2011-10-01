@@ -40,6 +40,7 @@
 #include "globals.hh"
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include "Simulation.hh"
 class G4ParticleGun;
 class G4Event;
 class DetectorConstruction;
@@ -50,7 +51,7 @@ class PrimaryGeneratorMessenger;
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
 public:
-  PrimaryGeneratorAction(DetectorConstruction*);    
+  PrimaryGeneratorAction();    
   virtual ~PrimaryGeneratorAction();
 
   void GeneratePrimaries(G4Event*);
@@ -63,7 +64,6 @@ public:
   double GetAngle(){return angle;}
 private:
   G4ParticleGun*           particleGun;	 //pointer a to G4  class
-  DetectorConstruction*    Detector;     //pointer to the geometry
     
   PrimaryGeneratorMessenger* gunMessenger;   //messenger of this class
   G4String                   rndmFlag;	     //flag for a rndm impact point
