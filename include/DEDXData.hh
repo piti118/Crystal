@@ -1,23 +1,21 @@
 #ifndef DEDXDATA
 #define DEDXDATA 1
+#include "mongo/client/dbclient.h"
 #include <map>
-
 #include <G4UnitsTable.hh>
 #include <iostream>
 #include <ostream>
 #include "DetectorConstruction.hh"
-
-//#include "yaml.h"
-#include "mongo/client/dbclient.h"
+#include "BSONInterface.hh"
 using namespace std;
 
-class DEDXData{
+class DEDXData: public BSONInterface{
 public:
   int eventno;
   int runno;
   double angle;
   std::map<int, double> dedx;//map from calorid to dedx 
-  
+  virtual ~DEDXData(){}
   void setup(int runno, int eventno, double angle, int minCalorId,int maxCalorId){
     this->runno = runno;
     this->eventno = eventno;
@@ -48,32 +46,7 @@ public:
     return sum;
   }
   
-//  void writeYAML(YAML::Emitter& out) const{
-//    using std::cout;using std::endl;
-//    cout << "Warning YAML output is deprecated" << endl;
-//    using std::map;
-//    out << YAML::BeginMap;
-//    out << YAML::Key << "runno" << YAML::Value << runno;
-//    out << YAML::Key << "eventno" << YAML::Value << eventno;
-//    out << YAML::Key << "angle" << YAML::Value << angle;
-//    out << YAML::Key << "dedx" << YAML::Value;
-//    out << YAML::BeginSeq;
-//    for(map<int,double>::const_iterator it = dedx.begin(); it!=dedx.end(); ++it){
-//      int calorId = it->first;
-//      double thisDEDx = it->second;
-//      out << YAML::BeginMap;
-//      out << YAML::Key << "calorId" << YAML::Value << calorId;
-//      out << YAML::Key << "row" << YAML::Value << DetectorConstruction::calorRow(calorId);
-//      out << YAML::Key << "col" << YAML::Value << DetectorConstruction::calorCol(calorId);  
-//      out << YAML::Key << "dedx" << YAML::Value << thisDEDx/MeV << YAML::Comment("MeV");
-//      out << YAML::EndMap;
-//    }
-//    out << YAML::EndSeq;
-//    out << YAML::Key << "Total DEDX" <<  YAML::Value << sumE()/MeV << YAML::Comment("MeV");
-//    out << YAML::EndMap;
-//  }
-  
-  mongo::BSONObj toBSON() const{
+  virtual mongo::BSONObj toBSON() {
     using mongo::BSONObjBuilder;
     using mongo::BSONArrayBuilder;
     using mongo::BSONObj;
@@ -105,16 +78,6 @@ public:
 class DEDXDatabase{
 public:
   static std::vector<DEDXData> data;
-//  static void writeYAML(std::ostream& stream){
-//    for(unsigned int i=0;i<data.size();++i){
-//      YAML::Emitter out;
-//      data[i].writeYAML(out);
-//      //assert(out.good());
-//      stream << out.c_str() << std::endl;
-//
-//      stream << "---" << std::endl;
-//    }
-//  }
   
   static void save(const std::string& host="localhost",const std::string& db="crystal",const std::string& coll="raw"){
     mongo::DBClientConnection c;
