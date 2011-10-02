@@ -10,8 +10,10 @@ plot/*.gif
 *.log
 *.pyc
 *.o
+*.os
 *.d
 *.a
+*.dylib
 tmp/*
 !tmp/.emptyfile
 bin/*
