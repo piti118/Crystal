@@ -1,7 +1,7 @@
 # scons file for MongoDB c++ client library and examples
 
 import os
-
+import os.path
 # options 
 AddOption( "--extrapath",
            dest="extrapath",
@@ -19,8 +19,10 @@ AddOption( "--prefix",
            help="installation root" )
 
 
-env = Environment( MSVS_ARCH=None )
+prefix = GetOption( "prefix" )
 
+env = Environment( MSVS_ARCH=None, LINKFLAGS = '-undefined dynamic_lookup' )
+env.Append(SHLINKFLAGS = '-install_name ' + os.path.realpath(prefix)+'/lib/$TARGET')
 def addExtraLibs( s ):
     for x in s.split(","):
         if os.path.exists( x ):
@@ -74,7 +76,7 @@ libs += env.Library( "mongoclient" , allClientFiles )
 
 # install
 
-prefix = GetOption( "prefix" )
+
 
 for x in libs:
     env.Install( prefix + "/lib/" , str(x) )
