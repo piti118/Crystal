@@ -19,17 +19,17 @@
 #endif
 #include <iostream>
 #include "HexPosition.hh"
+#include "HexDetector.hh"
 int main(int argc,char** argv)
 {
 
-  //HexPositionGenerator hexgen;
-  //hexgen.generate(10);
-  //return 0;
   G4RunManager * runManager = new G4RunManager();
 
   // Set mandatory initialization classes
   //
-  DetectorConstruction* detector = new DetectorConstruction();
+  //DetectorConstruction* detector = new DetectorConstruction();
+  Detector* detector = new HexDetector(5);
+  
   Simulation::getInstance()->detector = detector;
   runManager->SetUserInitialization(detector);
   // Physics list

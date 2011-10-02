@@ -6,6 +6,7 @@ std::vector<HexPosition> HexPositionGenerator::generate(int nring){
   using std::cout;using std::endl;
   std::vector<HexPosition> toReturn;
   //cout << step.size() << endl;
+  assert(nring>=0);
   HexPosition center(0,0,0,0);
   toReturn.push_back(center);
   

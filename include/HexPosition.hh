@@ -2,7 +2,8 @@
 #define HEXPOSITION_H value
 #include <vector>
 #include <ostream>
-
+#define _USE_MATH_DEFINES
+#include <cmath>
 class HexPosition{
 public:
   int l;
@@ -12,6 +13,11 @@ public:
   HexPosition():l(0),k(0),ringno(0),segmentno(0){}
   HexPosition(int l, int k, int rno, int sno):
     l(l),k(k),ringno(rno),segmentno(sno){}
+  std::pair<double,double> toXY(double scale=1.0) const{
+    double x = scale*(l+k)*std::cos(M_PI/3);
+    double y = scale*(l-k)*std::sin(M_PI/3);
+    return std::pair< double,double >(x,y);
+  }
   friend std::ostream& operator << (std::ostream& os, const HexPosition& hp){
     os << "HP" << "("
        << "l:" << hp.l << ","
@@ -19,6 +25,7 @@ public:
        << "r:" << hp.ringno << ","
        << "s:" << hp.segmentno
        << ")";
+     return os;
   }
 };
 class LK{
