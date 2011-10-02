@@ -5,7 +5,7 @@ OBJS = ${SRCS:.cpp=.o}
 all: lib
 
 $(OBJS): %.o: %.cpp
-	g++ -O2 -Iinclude -o $@ -c $< 
+	g++ -O3 -Iinclude -o $@ -c $< 
 lib: $(OBJS)
 	ar rcs lib/libyaml-cpp.a $^	
 	ranlib lib/libyaml-cpp.a
