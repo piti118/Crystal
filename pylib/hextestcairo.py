@@ -139,16 +139,20 @@ def dohex(cornerreq=4,output='hex',innerradius =36*unit.cm,outterradius=60*unit.
   surface.finish()
 
 def main():
-  innerradius = 36*unit.cm
-  smallouterradius = 60*unit.cm
-  bigoutterradius = 70*unit.cm
-  
-  crystalwidthinner = 1.5*unit.cm
-  crystalwidtharea = 3.22/2*unit.cm
-  crystalwidthouter = 1.5*math.cos(math.pi/6) 
-  
-  for i in range(6):
-    dohex(i+1,'hexbig-'+str(i)) 
+  for i in xrange(5):
+    hl = hexlist(i)
+    print[len(x) for x in hl]
+  print [1+x*(x+1)/2*6 for x in xrange(5)]
+  # innerradius = 36*unit.cm
+  # smallouterradius = 60*unit.cm
+  # bigoutterradius = 70*unit.cm
+  # 
+  # crystalwidthinner = 1.5*unit.cm
+  # crystalwidtharea = 3.22/2*unit.cm
+  # crystalwidthouter = 1.5*math.cos(math.pi/6) 
+  # 
+  # for i in range(6):
+  #   dohex(i+1,'hexbig-'+str(i)) 
 
 if __name__ == '__main__':
   main()

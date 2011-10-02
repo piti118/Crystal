@@ -18,10 +18,13 @@
 #include "G4UIExecutive.hh"
 #endif
 #include <iostream>
-
+#include "HexPosition.hh"
 int main(int argc,char** argv)
 {
 
+  //HexPositionGenerator hexgen;
+  //hexgen.generate(10);
+  //return 0;
   G4RunManager * runManager = new G4RunManager();
 
   // Set mandatory initialization classes

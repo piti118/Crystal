@@ -20,10 +20,6 @@ public:
     return toReturn;
   }
   //dump detector description to BSONObject
-  virtual mongo::BSONObj toBSON(){
-    using mongo::BSONObjBuilder;
-    BSONObjBuilder b;
-    return b.obj();
-  }
+  virtual mongo::BSONObj toBSON();
 };
 #endif

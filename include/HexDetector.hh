@@ -20,8 +20,6 @@ class HexDetector : public Detector
   
     HexDetector();
    ~HexDetector();
-
-  public:
      
     G4VPhysicalVolume* Construct();
     static inline unsigned int calorIndex(unsigned int iring, unsigned iseg){return 1000;}
