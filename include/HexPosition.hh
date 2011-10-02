@@ -1,7 +1,8 @@
 #ifndef HEXPOSITION_H
 #define HEXPOSITION_H value
 #include <vector>
-//#include <cassert>
+#include <ostream>
+
 class HexPosition{
 public:
   int l;
@@ -11,6 +12,14 @@ public:
   HexPosition():l(0),k(0),ringno(0),segmentno(0){}
   HexPosition(int l, int k, int rno, int sno):
     l(l),k(k),ringno(rno),segmentno(sno){}
+  friend std::ostream& operator << (std::ostream& os, const HexPosition& hp){
+    os << "HP" << "("
+       << "l:" << hp.l << ","
+       << "k:" << hp.k << ","
+       << "r:" << hp.ringno << ","
+       << "s:" << hp.segmentno
+       << ")";
+  }
 };
 class LK{
 public:

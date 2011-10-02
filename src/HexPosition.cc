@@ -1,7 +1,15 @@
 #include "HexPosition.hh"
+#include <cassert>
+#include "util.hh"
+#include <iostream>
 std::vector<HexPosition> HexPositionGenerator::generate(int nring){
+  using std::cout;using std::endl;
   std::vector<HexPosition> toReturn;
-  for(int iring=0;iring<nring;iring++){//for eachring
+  //cout << step.size() << endl;
+  HexPosition center(0,0,0,0);
+  toReturn.push_back(center);
+  
+  for(int iring=1;iring<nring;iring++){//for eachring
     LK cp(iring,iring);
     //walking along step
     int segno = 0;
@@ -16,6 +24,8 @@ std::vector<HexPosition> HexPositionGenerator::generate(int nring){
       }//end seg
     }//end step
   }//end ring
-  //assert(toReturn.size()==1+nring*(nring-1)/2*6);
+  //std::cout << toReturn << std::endl;
+  assert(toReturn.size()==1+nring*(nring-1)/2*6);
+
   return toReturn;
 } 
