@@ -31,10 +31,19 @@ class HexDetector : public Detector
     inline unsigned int calorSeg(int id){return posmap[id-idoffset].segmentno;}
     
     bool inDetector(int id){
-      int order = id = idoffset;
-      return id >=0 && id < posmap.size();
+      int order = id - idoffset;
+      return order >=0 && order < posmap.size();
     }
     void initPosMap();
+    
+    virtual int calorL(int id){return posmap[id-idoffset].l;}
+    virtual int calorK(int id){return posmap[id-idoffset].k;}
+    virtual double calorX(int id){return posmap[id-idoffset].toXY().first;}
+    virtual double calorY(int id){
+      return posmap[id-idoffset].toXY().second;}
+    virtual int ringno(int id){return posmap[id-idoffset].ringno;}
+    virtual int segmentno(int id){return posmap[id-idoffset].segmentno;}
+    
   private:
     
     G4Material* LYSO;

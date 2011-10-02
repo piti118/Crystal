@@ -21,5 +21,11 @@ public:
   }
   //dump detector description to BSONObject
   virtual mongo::BSONObj toBSON();
+  virtual int calorL(int id){return 0;}
+  virtual int calorK(int id){return 0;}
+  virtual double calorX(int id){return 0;}
+  virtual double calorY(int id){return 0;}
+  virtual int ringno(int id){return 0;}
+  virtual int segmentno(int id){return 0;}
 };
 #endif

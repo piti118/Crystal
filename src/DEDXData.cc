@@ -1,5 +1,6 @@
 #include "DEDXData.hh"
 #include <vector>
+#include "Simulation.hh"
 std::vector< DEDXData > DEDXDatabase::data;
 
 mongo::BSONObj DEDXData::toBSON() {
@@ -11,15 +12,19 @@ mongo::BSONObj DEDXData::toBSON() {
  b << "runno" << runno;
  b << "eventno" << eventno;
  b << "angle" << angle;
-
+ Detector* det = Simulation::getInstance()->detector;
  BSONArrayBuilder dedxlist;
  for(map<int,double>::const_iterator it = dedx.begin(); it!=dedx.end(); ++it){
    int calorId = it->first;
    double thisDEDx = it->second;
    BSONObjBuilder calor;
    calor << "calorId" << calorId;
-   calor << "row" << DetectorConstruction::calorRow(calorId);
-   calor << "col" << DetectorConstruction::calorCol(calorId);
+   calor << "y" << det->calorY(calorId)/cm;
+   calor << "x" << det->calorX(calorId)/cm;
+   calor << "ringno" << det->ringno(calorId);
+   calor << "iseg" << det->segmentno(calorId);
+   calor << "l" << det->calorL(calorId);
+   calor << "k" << det->calorK(calorId);
    calor << "dedx" << thisDEDx/MeV;
    dedxlist << calor.obj();
  }

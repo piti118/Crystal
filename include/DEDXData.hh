@@ -28,6 +28,7 @@ public:
       dedx[calorId]=0.;
     }
     dedx[calorId]+=dedxval;
+    //std::cout << "accumulate" << " " << calorId << std::endl;
   }
   
   void reset(int runno, int eventno){
