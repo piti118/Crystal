@@ -26,10 +26,14 @@ void EventAction::BeginOfEventAction(const G4Event* evt)
   if (eventno%100==0){
     G4cout << "### Event " << evt->GetEventID() << " start." << G4endl;
   }
+  Simulation* sim = Simulation::getInstance();
+  sim->pgaction->rand();//randomize positon
   dedx.setup(
-    Simulation::getInstance()->runaction->runno,
+    sim->runaction->runno,
     evt->GetEventID(),
-    Simulation::getInstance()->pgaction->GetAngle());  
+    sim->pgaction->GetAngle(),
+    sim->pgaction->xPos(),
+    sim->pgaction->yPos());  
 }
 
 void EventAction::EndOfEventAction(const G4Event* evt)

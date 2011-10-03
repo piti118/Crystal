@@ -13,9 +13,11 @@ public:
   int eventno;
   int runno;
   double angle;
+  double beamx;
+  double beamy;
   std::map<int, double> dedx;//map from calorid to dedx 
   virtual ~DEDXData(){}
-  void setup(int runno, int eventno, double angle);
+  void setup(int runno, int eventno, double angle, double beamx, double beamy);
   
   void accumulate(int calorId,double dedxval);
   

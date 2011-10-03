@@ -36,12 +36,12 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
   delete particleGun;
   delete gunMessenger;
 }
-
+void PrimaryGeneratorAction::rand(){ 
+   G4ThreeVector pos = Simulation::getInstance()->detector->randPos();
+   particleGun->SetParticlePosition(pos);
+}
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-  G4ThreeVector pos = Simulation::getInstance()->detector->randPos();
-  //std::cout << pos.r()/cm << std::endl;
-  particleGun->SetParticlePosition(pos);
   particleGun->GeneratePrimaryVertex(anEvent);
 }
 

@@ -28,7 +28,14 @@ class HexDetector : public Detector
     static const unsigned int idoffset = 10000;
     virtual const char* getName(){return "hex";}
     G4VPhysicalVolume* Construct();
-
+    G4ThreeVector randPos(){
+        G4double x=((double)std::rand()/(double)RAND_MAX)*2*hexsize-hexsize;
+        G4double y=((double)std::rand()/(double)RAND_MAX)*2*hexsize-hexsize;
+        G4double z=0.;
+        G4ThreeVector toReturn(x,y,z);
+        return toReturn;
+    }
+    
     inline unsigned int calorRing(int id){return posmap[id-idoffset].ringno;}
     inline unsigned int calorSeg(int id){return posmap[id-idoffset].segmentno;}
     

@@ -3,10 +3,12 @@
 #include "Simulation.hh"
 std::vector< DEDXData > DEDXDatabase::data;
 
-void DEDXData::setup(int runno, int eventno, double angle){
+void DEDXData::setup(int runno, int eventno, double angle, double beamx, double beamy){
   this->runno = runno;
   this->eventno = eventno;
   this->angle = angle;
+  this->beamx = beamx;
+  this->beamy = beamy;
   dedx.clear();
   reset();
 }
@@ -48,6 +50,8 @@ mongo::BSONObj DEDXData::toBSON() {
  b << "runno" << runno;
  b << "eventno" << eventno;
  b << "angle" << angle;
+ b << "beamx" << beamx/cm;
+ b << "beamy" << beamy/cm;
  Detector* det = Simulation::getInstance()->detector;
  BSONArrayBuilder dedxlist;
  for(map<int,double>::const_iterator it = dedx.begin(); it!=dedx.end(); ++it){

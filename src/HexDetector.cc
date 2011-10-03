@@ -23,7 +23,7 @@
 #include "G4Polyhedra.hh"
 #include <cmath>
 HexDetector::HexDetector(int nring):
-  nring(nring),posmap(),hexsize(3*cm),gap(0.1*mm),
+  nring(nring),posmap(),hexsize(1.5*cm),gap(0.1*mm),
   LYSO(0),Air(0),world_box(0),world_log(0),world_pv(0),
   calor_box(),calor_log(),calor_pv()
 {
