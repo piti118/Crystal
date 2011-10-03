@@ -2,8 +2,6 @@
 #include "G4UImanager.hh"
 
 #include "Randomize.hh"
-
-#include "DetectorConstruction.hh"
 #include "PhysicsList.hh"
 #include "PrimaryGeneratorAction.hh"
 #include "RunAction.hh"
@@ -20,6 +18,7 @@
 #include <iostream>
 #include "HexPosition.hh"
 #include "HexDetector.hh"
+#include "SquareDetector.hh"
 int main(int argc,char** argv)
 {
 
@@ -27,9 +26,8 @@ int main(int argc,char** argv)
 
   // Set mandatory initialization classes
   //
-  //DetectorConstruction* detector = new DetectorConstruction();
-  Detector* detector = new HexDetector(5);
-  
+  //Detector* detector = new HexDetector(5);
+  Detector* detector = new SquareDetector(5);  
   Simulation::getInstance()->detector = detector;
   runManager->SetUserInitialization(detector);
   // Physics list
@@ -75,9 +73,9 @@ int main(int argc,char** argv)
     {
       for(int deg=0;deg<90;deg++){
         gen_action->SetAngle(deg);
-        runManager->BeamOn(10);
+        runManager->BeamOn(1000);
       }
-      DEDXDatabase::save();
+      DEDXDatabase::save("localhost",Simulation::getInstance()->detector->getName());
     }
   else
     {  // interactive mode : define UI session

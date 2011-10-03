@@ -22,9 +22,11 @@ class HexDetector : public Detector
     ~HexDetector();
     
     int nring;
+    double hexsize;
+    double gap;
     std::vector<HexPosition> posmap;
     static const unsigned int idoffset = 10000;
-    
+    virtual const char* getName(){return "hex";}
     G4VPhysicalVolume* Construct();
 
     inline unsigned int calorRing(int id){return posmap[id-idoffset].ringno;}
@@ -38,11 +40,22 @@ class HexDetector : public Detector
     
     virtual int calorL(int id){return posmap[id-idoffset].l;}
     virtual int calorK(int id){return posmap[id-idoffset].k;}
-    virtual double calorX(int id){return posmap[id-idoffset].toXY().first;}
+    //TODO: fix this
+    virtual double calorX(int id){
+      return posmap[id-idoffset].toXY(2*hexsize+gap).first;
+    }
     virtual double calorY(int id){
-      return posmap[id-idoffset].toXY().second;}
+      return posmap[id-idoffset].toXY(2*hexsize+gap).second;
+    }
     virtual int ringno(int id){return posmap[id-idoffset].ringno;}
     virtual int segmentno(int id){return posmap[id-idoffset].segmentno;}
+    virtual std::vector<int> crystalList(){
+      std::vector<int> v;
+      for(int i=0;i<posmap.size();i++){
+        v.push_back(i+idoffset);
+      }
+      return v;
+    }
     
   private:
     

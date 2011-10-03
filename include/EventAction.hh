@@ -4,10 +4,9 @@
 #include "G4UserEventAction.hh"
 #include "globals.hh"
 #include "DEDXData.hh"
-#include "DetectorConstruction.hh"
 #include "PrimaryGeneratorAction.hh"
 class EventActionMessenger;
-
+class DEDXData;
 class EventAction : public G4UserEventAction
 {
 public:

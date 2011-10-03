@@ -43,7 +43,6 @@
 #include "Simulation.hh"
 class G4ParticleGun;
 class G4Event;
-class DetectorConstruction;
 class PrimaryGeneratorMessenger;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

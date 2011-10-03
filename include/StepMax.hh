@@ -37,8 +37,6 @@
 #include "G4ParticleDefinition.hh"
 #include "G4Step.hh"
 
-#include "DetectorConstruction.hh"
-
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

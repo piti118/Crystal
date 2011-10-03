@@ -1,7 +1,5 @@
 #include "Simulation.hh"
 #include "SteppingAction.hh"
-
-#include "DetectorConstruction.hh"
 #include "EventAction.hh"
 
 #include "G4Step.hh"
@@ -23,7 +21,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4TouchableHandle theTouchable = preStepPoint->GetTouchableHandle();
   G4int copyNo = theTouchable->GetCopyNumber();
   G4double edep = aStep->GetTotalEnergyDeposit();
-  std::cout << Simulation::getInstance()->detector->touchableInDetector(theTouchable) << std::endl;
+  //std::cout << Simulation::getInstance()->detector->touchableInDetector(theTouchable) << std::endl;
    if(Simulation::getInstance()->detector->touchableInDetector(theTouchable)){
     Simulation::getInstance()->eventaction->dedx.accumulate(copyNo,edep);
   }

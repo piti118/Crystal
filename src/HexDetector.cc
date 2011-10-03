@@ -23,7 +23,7 @@
 #include "G4Polyhedra.hh"
 #include <cmath>
 HexDetector::HexDetector(int nring):
-  nring(nring),posmap(),
+  nring(nring),posmap(),hexsize(3*cm),gap(0.1*mm),
   LYSO(0),Air(0),world_box(0),world_log(0),world_pv(0),
   calor_box(),calor_log(),calor_pv()
 {
@@ -56,7 +56,6 @@ void HexDetector::DefineMaterials()
   G4Element* O = nistManager->FindOrBuildElement("O");
   G4Element* Ce = nistManager->FindOrBuildElement("Ce");
   
-  
   LYSO = new G4Material("LYSO", 7.1*g/cm3, 5, kStateSolid);
   LYSO->AddElement(Lu, 71.43*perCent);
   LYSO->AddElement(Y, 4.03*perCent);
@@ -65,7 +64,6 @@ void HexDetector::DefineMaterials()
   LYSO->AddElement(Ce, 0.02*perCent);
   
   Air = nistManager->FindOrBuildMaterial("G4_AIR");
-  
 }
 
 G4VPhysicalVolume* HexDetector::ConstructCalorimeter()
@@ -79,8 +77,6 @@ G4VPhysicalVolume* HexDetector::ConstructCalorimeter()
   G4double offset_y = 0*mm;
   G4double offset_z = 0*mm;
   
-  G4double gap = 0.1*mm;
-  G4double hexsize = 3*cm;
   G4double crystal_depth = 13*cm;
   G4double padding_x = 0.1*mm;
   G4double padding_y = 0.1*mm;

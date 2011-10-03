@@ -1,4 +1,17 @@
 #include <ostream>
+#include <iostream>
+#define PT_DEBUG(x) do{\
+  std::cout << __FILE__ << ":" << __LINE__ << " | " << #x << " = " << x << std::endl;\
+} while(false)
+#define PT_ASSERTEQ(x,y) do{\
+  if(x!=y){\
+    std::cout << "Assertion equal failed " << __FILE__ << ":" << __LINE__ << std::endl;\
+    std::cout << #x << " = " << x << std::endl;\
+    std::cout << #y << " = " << y << std::endl;\
+    std::exit(1);\
+  } \
+} while(false)
+
 template<class T> inline std::ostream& operator << (std::ostream &os, const std::vector<T>& vec)
 {
     os << "[ ";
@@ -11,3 +24,5 @@ template<class T> inline std::ostream& operator << (std::ostream &os, const std:
 	os << " ]";
     return os;
 }
+
+

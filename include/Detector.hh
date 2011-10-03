@@ -4,13 +4,14 @@
 #include "BSONInterface.hh"
 #include "G4TouchableHandle.hh"
 #include "G4VUserDetectorConstruction.hh"
+#include <vector>
 class Detector: public BSONInterface, public G4VUserDetectorConstruction{
 public:
   virtual ~Detector(){}
 
   //determine whether detector part with this id is in this detector
   virtual bool inDetector(int id){return false;}
-  
+  virtual const char* getName(){return "generic";}
   //determine wheter touchablehandle with is in this detector
   virtual bool touchableInDetector(const G4TouchableHandle& t){
     return inDetector(t->GetCopyNumber());
@@ -21,11 +22,13 @@ public:
   }
   //dump detector description to BSONObject
   virtual mongo::BSONObj toBSON();
-  virtual int calorL(int id){return 0;}
-  virtual int calorK(int id){return 0;}
-  virtual double calorX(int id){return 0;}
-  virtual double calorY(int id){return 0;}
-  virtual int ringno(int id){return 0;}
-  virtual int segmentno(int id){return 0;}
+  virtual int calorL(int id)=0;//{return 0;}
+  virtual int calorK(int id)=0;//{return 0;}
+  virtual double calorX(int id)=0;//{return 0;}
+  virtual double calorY(int id)=0;//{return 0;}
+  virtual int ringno(int id)=0;//{return 0;}
+  virtual int segmentno(int id)=0;//{return 0;}
+  //this should return a list of crystal id
+  virtual std::vector<int> crystalList()=0;//{std::vector<int> v;return v;}
 };
 #endif
