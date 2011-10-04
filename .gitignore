@@ -14,6 +14,7 @@ plot/*.gif
 *.d
 *.a
 *.dylib
+pylib/scratch.py
 tmp/*
 !tmp/.emptyfile
 bin/*
