@@ -18,15 +18,15 @@ class DetectorMessenger;
 class HexDetector : public Detector
 {
   public:
-    HexDetector(int nring);
+    HexDetector(const char* name,int nring,double hexsize);
     ~HexDetector();
-    
+    const char* name;
     int nring;
     double hexsize;
     double gap;
     std::vector<HexPosition> posmap;
     static const unsigned int idoffset = 10000;
-    virtual const char* getName(){return "hex";}
+    virtual const char* getName(){return name;}
     G4VPhysicalVolume* Construct();
     G4ThreeVector randPos(){
         G4double x=((double)std::rand()/(double)RAND_MAX)*2*hexsize-hexsize;

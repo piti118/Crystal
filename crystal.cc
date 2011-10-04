@@ -23,11 +23,26 @@ int main(int argc,char** argv)
 {
 
   G4RunManager * runManager = new G4RunManager();
-
+  const char* allowedoption[] = {"hexbig","hexsmall","square"};
+  Detector* detector=0;
+  if(argc < 1){
+    std::cout << "Specify detector [hexbig|hexsmall|square]" << std::endl;
+    std::exit(1);
+  }else{
+    std::string det(argv[1]);
+    if(det.compare("hexbig")==0){
+      detector = new HexDetector("hexbig",6,1.5*cm);
+    }else if(det.compare("hexsmall")==0){
+      detector = new HexDetector("hexsmall",6,1.3*cm);
+    }else if(det.compare("square")==0){
+      detector = new SquareDetector(5);        
+    }else{
+      std::cout << "unknown detector type" << det << std::endl;
+      std::exit(1);
+    }
+  }
   // Set mandatory initialization classes
   //
-  //Detector* detector = new HexDetector(5);
-  Detector* detector = new SquareDetector(5);  
   Simulation::getInstance()->detector = detector;
   runManager->SetUserInitialization(detector);
   // Physics list
@@ -69,7 +84,7 @@ int main(int argc,char** argv)
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
   
-  if (argc == 1)   // batch mode
+  if (argc == 2)   // batch mode
     {
       for(int deg=0;deg<90;deg++){
         gen_action->SetAngle(deg);
