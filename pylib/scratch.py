@@ -1,5 +1,8 @@
-from util import Object,dstat
-from pprint import pprint
-a = [dict((str(i),i+j) for i in xrange(10) ) for j in xrange(10) ]
-pprint([i for i in a])
-pprint(dstat(a))
+import argparse
+
+parser = argparse.ArgumentParser(description='Example with non-optional arguments')
+
+parser.add_argument('count', action="store", type=int)
+parser.add_argument('units', action="store")
+
+parser.parse_args()
