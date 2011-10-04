@@ -90,6 +90,9 @@ def average(xlist,wlist):
     sw = sum(w for w in wlist)
     return swx/sw if sw!=0 else 0
 
+def closeto(x,tolerance=0.000001):
+    return {'$lt':x+tolerance,'$gt':x-tolerance}
+
 def linearPosition(calor,r=1):
   fcalors =centerFilter(calor,r)
   #print (len(fcalors),(2*r+1)**2)
