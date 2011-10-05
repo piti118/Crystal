@@ -20,3 +20,4 @@ tmp/*
 bin/*
 !bin/.emptyfile
 .DS_Store
+plot/scratch.py
