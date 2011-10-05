@@ -23,10 +23,9 @@ int main(int argc,char** argv)
 {
 
   G4RunManager * runManager = new G4RunManager();
-  const char* allowedoption[] = {"hexbig","hexsmall","square"};
   Detector* detector=0;
   if(argc < 1){
-    std::cout << "Specify detector [hexbig|hexsmall|square]" << std::endl;
+    std::cout << "Specify detector [hexarea|hexbig|hexsmall|square]" << std::endl;
     std::exit(1);
   }else{
     std::string det(argv[1]);
@@ -35,7 +34,9 @@ int main(int argc,char** argv)
     }else if(det.compare("hexsmall")==0){
       detector = new HexDetector("hexsmall",6,1.3*cm);
     }else if(det.compare("square")==0){
-      detector = new SquareDetector(5);        
+      detector = new SquareDetector(5);  
+    }else if(det.compare("hexarea")==0){
+      detector = new HexDetector("hexarea",6,1.612*cm);
     }else{
       std::cout << "unknown detector type" << det << std::endl;
       std::exit(1);
