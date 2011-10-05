@@ -1,8 +1,8 @@
 import util
 import pymongo
 import argparse
-def closeto(x,tl=0.0000001):
-    return {'$lt':x+tl,'$gt':x-tl}
+from mongoutil import closeto
+from clusterutil import *
 
 def go(dbname,type_):
     db = pymongo.Connection()[dbname]

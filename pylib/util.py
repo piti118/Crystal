@@ -1,8 +1,6 @@
-import pymongo
 from pprint import pprint
 from math import sqrt, floor
 from itertools import izip,repeat,imap
-from UserDict import UserDict
 
 class Struct:
     def __init__(self, **entries): 
@@ -25,6 +23,9 @@ class Stat:
     @staticmethod
     def statmap(n,s,s2):
         return Stat(n,s,s2).__dict__
+
+def cleanup_for_file_name(s):
+    return "".join([x for x in s if x.isalpha() or x.isdigit()])
 
 def eadd(x,y):#element wise add for iterable
     if x is None: x = (0,)*len(y)
