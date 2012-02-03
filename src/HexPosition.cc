@@ -1,6 +1,6 @@
 #include "HexPosition.hh"
 #include <cassert>
-#include "util.hh"
+//#include "util.hh"
 #include <iostream>
 std::vector<HexPosition> HexPositionGenerator::generate(int nring){
   using std::cout;using std::endl;

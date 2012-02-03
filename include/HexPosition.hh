@@ -13,6 +13,7 @@ public:
   HexPosition():l(0),k(0),ringno(0),segmentno(0){}
   HexPosition(int l, int k, int rno, int sno):
     l(l),k(k),ringno(rno),segmentno(sno){}
+  //return the centroid of the hex
   std::pair<double,double> toXY(double scale=1.0) const{
     double x = scale*(l+k)*std::cos(M_PI/3);
     double y = scale*(l-k)*std::sin(M_PI/3);
@@ -30,6 +31,8 @@ public:
 };
 class LK{
 public:
+  //l point 60 degree to upper right
+  //k points 60 degree to lower right
   LK(int l, int k):l(l),k(k){}
   int l; int k;
   void operator += (LK x) {l+=x.l;k+=x.k;}
@@ -53,6 +56,8 @@ private:
     addstep(1,0);//up right
     addstep(1,1);//right
     addstep(0,1);//down right
+    /// _ \
+    //\ _ /
   }
   inline void addstep(int l, int k){
     LK x(l,k);step.push_back(x);
