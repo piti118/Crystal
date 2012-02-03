@@ -19,19 +19,20 @@ def initdb():
     return dbs
 
 def closeto(x,tl=0.000001): return {'$lt':x+tl,'$gt':x-tl}
-def key_alg_a(alg,a):return {'alg':alg,'a':closeto(a)}
+def key_cl_alg_a(cl,alg,a):return {'clus':cl,'alg':alg,'a':closeto(a)}
 def sort_angle(): return [('angle',1)]
-def f_Emean(x): return (x['E']['mean'],x['angle'])
-def f_Eres(x): return (1-x['E']['res'],x['angle'])
-def f_rmean(x): return (x['dis']['mean'],x['angle'])
-def f_rsd(x): return (x['dis']['sd'],x['angle'])
+def f_Emean(x): return (x['E']['fitmu'],x['angle'])
+def f_Eres(x): return (x['E']['fitstd']/x['E']['fitmu']*100,x['angle'])
+def f_rmean(x): return (x['dis']['fitmu'],x['angle'])
+def f_rsd(x): return (x['dis']['fitstd']/x['dis']['fitmu'],x['angle'])
 
-def mongoplot(ax,f,cur,label):
+def mongoplot(ax,f,cur,label,marker='',alpha=1.0):
     #f(x) should return tuple of r and theta(in radians)
     r,theta = zip(*[f(x) for x in cur])
-    print label,r[:5]
-    ax.plot(theta,r,label=label)
+    #print label,r[:5]
+    ax.plot(theta,r,label=label,marker=marker,alpha=alpha)
 
+#TODO: make rmin and do it correctly
 def add_first_quardrant_polar(fig,rect,rmax,thetamax=90,title=""):
  
     # scale degree to radians this make the title looks really nice
@@ -84,9 +85,9 @@ def add_first_quardrant_polar(fig,rect,rmax,thetamax=90,title=""):
 def setup_axis(fig):
     ax={}
     ax['E_mean'] = add_first_quardrant_polar(fig,221,105,90,'mean E(MeV)')
-    ax['E_res'] = add_first_quardrant_polar(fig,222,1.0,90,'1 - rms/mean')
-    ax['r_mean'] = add_first_quardrant_polar(fig,223,4.5,90,'Mean Shift(cm)')
-    ax['r_sd'] = add_first_quardrant_polar(fig,224,2.5,90,'Shift RMS(cm)')
+    ax['E_res'] = add_first_quardrant_polar(fig,222,4,90,'resoluiton(%)')
+    ax['r_mean'] = add_first_quardrant_polar(fig,223,5,90,'Mean Shift(cm)')
+    ax['r_sd'] = add_first_quardrant_polar(fig,224,0.75,90,'Shift RMS(cm)')
     return ax
 
 def decorate_ax(ax):
@@ -99,20 +100,25 @@ def make_legend(ax):
 def plot_by_det(dbs):
     for key,db in dbs.items():
         col = db.cluster_sum
-        plt.rc('font',size=10)
+        plt.rc('font',size=8)
         fig = plt.figure(figsize=(10,10))
         fig.suptitle(key,fontsize=15)
         ax=setup_axis(fig)
         alglist = col.distinct('alg')
-        for alg in alglist:
-            alist = col.find({'alg':alg}).distinct('a')
-            for a in alist:
-                cur = [ x for x in col.find(key_alg_a(alg,a)).sort(sort_angle()) ]
-                label = alg+'_'+str(a)
-                mongoplot(ax['E_mean'],f_Emean,cur,label=label)
-                mongoplot(ax['E_res'],f_Eres,cur,label=label)
-                mongoplot(ax['r_mean'],f_rmean,cur,label=label)
-                mongoplot(ax['r_sd'],f_rsd,cur,label=label)
+        for cl in ['adj']:
+            for alg in alglist:
+                alist = col.find({'alg':alg}).distinct('a')
+                for a in alist:
+                    marker={'ring':'','adj':'x'}[cl]
+                    alhpa={'ring':0.5,'adj':1.0}[cl]
+                    cur = [ x for x in col.find(key_cl_alg_a(cl,alg,a)).sort(sort_angle()) ]
+                    label = cl+'_'+alg+'_'+str(a)
+                    #print key,len(cur),cl,alg,a
+                    
+                    mongoplot(ax['E_mean'],f_Emean,cur,label=label,marker=marker)
+                    mongoplot(ax['E_res'],f_Eres,cur,label=label,marker=marker)
+                    mongoplot(ax['r_mean'],f_rmean,cur,label=label,marker=marker)
+                    mongoplot(ax['r_sd'],f_rsd,cur,label=label,marker=marker)
             ###
         ###
         decorate_ax(ax)
@@ -120,13 +126,14 @@ def plot_by_det(dbs):
         fig.savefig(key+'.pdf')
 
 def comparedet(dbs):
-    plt.rc('font',size=10)
+    plt.rc('font',size=8)
     fig = plt.figure(figsize=(10,10))
     fig.suptitle('Compare by crystal shape',fontsize=15)
     ax=setup_axis(fig)
+    clus = 'adj'
     for key,db in dbs.items():
         col = db.cluster_sum
-        keyy = key_alg_a('log',2)
+        keyy = key_cl_alg_a(clus,'log',4)
         cur = [x for x in col.find(keyy).sort(sort_angle())]
         mongoplot(ax['E_mean'],f_Emean,cur,label=key)
         mongoplot(ax['E_res'],f_Eres,cur,label=key)
@@ -136,11 +143,28 @@ def comparedet(dbs):
     make_legend(ax)
     
     fig.savefig('bydet.pdf')
-  
+def crystalused(dbs):
+    plt.rc('font',size=10)
+    fig = plt.figure(figsize=(5,5))
+    fig.suptitle('Number of crystal used in each geometry')
+    cluses = ['adj']
+    ax = add_first_quardrant_polar(fig,111,30,thetamax=90,title="") 
+    for key,db in dbs.items():
+        for clus in cluses:
+            col = db.cluster_sum
+            keyy = key_cl_alg_a(clus,'log',2)
+            cur = [(x['clsize']['mean'],x['angle']) for x in col.find(keyy).sort(sort_angle())]
+            r,theta = zip(*cur)
+            #print r[:5]
+            ax.plot(theta,r,label=clus+'_'+key)
+            ax.legend(loc='lower right',prop={'size':8})
+    fig.savefig('ncrystal.pdf')
+    
 def main():
     dbs = initdb()
     plot_by_det(dbs)
     comparedet(dbs)
+    crystalused(dbs)
 
     
 

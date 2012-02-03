@@ -24,6 +24,7 @@ class HexDetector : public Detector
     int nring;
     double hexsize;
     double gap;
+    double crystal_length;
     std::vector<HexPosition> posmap;
     static const unsigned int idoffset = 10000;
     virtual const char* getName(){return name;}
@@ -63,7 +64,9 @@ class HexDetector : public Detector
       }
       return v;
     }
-    
+    virtual void setCrystalLength(double length){
+        crystal_length=length;
+    }
   private:
     
     G4Material* LYSO;

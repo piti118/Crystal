@@ -62,6 +62,9 @@ class SquareDetector : public Detector
       return v;
     }
     
+    virtual void setCrystalLength(double length){
+        crystal_z = length;
+    }
   private:
     
     std::vector<SquarePosition> posmap;

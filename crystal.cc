@@ -19,12 +19,15 @@
 #include "HexPosition.hh"
 #include "HexDetector.hh"
 #include "SquareDetector.hh"
+#include <sstream>
 int main(int argc,char** argv)
 {
 
   G4RunManager * runManager = new G4RunManager();
+  double default_length = 13;
   Detector* detector=0;
-  if(argc < 1){
+  std::string dbname("default_db");
+  if(argc < 2){
     std::cout << "Specify detector [hexarea|hexbig|hexsmall|square]" << std::endl;
     std::exit(1);
   }else{
@@ -41,7 +44,19 @@ int main(int argc,char** argv)
       std::cout << "unknown detector type" << det << std::endl;
       std::exit(1);
     }
+    dbname = det;
   }
+  
+  //see if user specify length
+  if(argc>=3){
+      double length;
+      std::stringstream ss(argv[2]);
+      ss >> length;
+      default_length=length;
+      dbname = dbname + "_" + ss.str();
+  }
+  detector->setCrystalLength(default_length*cm);
+  
   // Set mandatory initialization classes
   //
   Simulation::getInstance()->detector = detector;
@@ -85,13 +100,15 @@ int main(int argc,char** argv)
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
   
-  if (argc == 2)   // batch mode
+  if (argc <= 3)   // batch mode
     {
       for(int deg=0;deg<90;deg++){
         gen_action->SetAngle(deg);
-        runManager->BeamOn(1000);
+        runManager->BeamOn(4000);
       }
-      DEDXDatabase::save("localhost",Simulation::getInstance()->detector->getName());
+      //DEDXDatabase::save("localhost",Simulation::getInstance()->detector->getName());
+      DEDXDatabase::save("localhost",dbname);
+        
     }
   else
     {  // interactive mode : define UI session

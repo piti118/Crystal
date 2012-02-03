@@ -52,7 +52,7 @@ def tstat(it):#stat for generator of tuple of values
 def stat(it):
     (n,s,s2) = reduce(lambda x,y: eadd(x,(1,y,y**2)), it, None)
     o = Stat(n,s,s2)
-    return o
+    return o    
 
 def statmap(it):
     return stat(it).tomap()

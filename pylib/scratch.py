@@ -1,8 +1,9 @@
-import argparse
-
-parser = argparse.ArgumentParser(description='Example with non-optional arguments')
-
-parser.add_argument('count', action="store", type=int)
-parser.add_argument('units', action="store")
-
-parser.parse_args()
+import pymongo
+import clusterutil as cu
+db = pymongo.Connection().hexbig
+col = db.raw
+#get the first event
+evt = col.find_one({'eventno':80,'runno':0})
+shape = cu.HexShape
+clist = cu.cluster_expansion(evt['dedx'],shape)
+print clist

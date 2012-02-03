@@ -22,6 +22,7 @@ public:
   }
   //dump detector description to BSONObject
   virtual mongo::BSONObj toBSON();
+  virtual void setCrystalLength(double length)=0;
   virtual int calorL(int id)=0;//{return 0;}
   virtual int calorK(int id)=0;//{return 0;}
   virtual double calorX(int id)=0;//{return 0;}

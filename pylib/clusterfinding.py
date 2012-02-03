@@ -6,46 +6,55 @@ import argparse
 import pymongo
 from clusterutil import *
 
-def writecluster(col,alg,evt,pos,E,a=0):
+def writecluster(col,alg,clus,evt,pos, E, cluster_size, a=0):
     beam_center = (evt['beamx'],evt['beamy'])
     dis = distance( beam_center, pos)
     col.insert({
+        'clus':clus,
         'alg':alg,
         'a':a,
         'x':pos[0],
         'y':pos[1],
         'E':E,
+        'clsize': cluster_size,
         'dis':dis,
         'bx':evt['beamx'],
         'by':evt['beamy'],
         'angle': evt['angle'],
         'evt':evt['_id']})  
-      
+    
 def go(dbname,type_):
     db = pymongo.Connection()[dbname]
     i=0
+    db.drop_collection("cluster")
     col = db.cluster
-    col.remove()
-    ring = {'hex':hex_ring,'square':square_ring}[type_]
 
+    shape = {'hex':HexShape,'square':SquareShape}[type_]
+    #cluster_finder = {'ring':ring_cluster,'adj':cluster_expansion}
+    cluster_finder = {'adj':cluster_expansion}
+    
     for evt in db.raw.find():
         clist = evt['dedx']
-        cluster = find_cluster(clist,ring,ringsize=2)
-        #linear
-        lin_center = lin_pos(cluster)
-        E = totalE(cluster)
-        writecluster(col, 'lin', evt, lin_center, E)
-        #sqr
-        sqr_center = sqr_pos(cluster)
+        for cf_name, cf in cluster_finder.items():
+            cluster = cf(clist,shape)
+            cluster_size = len(cluster)
+            if cluster_size>0: #ignore cluster that shot right betwen the gap
+                #linear
+                lin_center = lin_pos(cluster)
+                E = totalE(cluster)
+                cluster_size = len(cluster)
+                writecluster(col, 'lin', cf_name, evt, lin_center, E, cluster_size)
+                #sqr
+                sqr_center = sqr_pos(cluster)
         
-        writecluster(col, 'sqr', evt,sqr_center, E)
-        #log
-        alist = [2.0,3.0,4.0,5.0,6.0]
-        for a in alist:
-            log_center = log_pos(cluster,a=a)
-            writecluster(col,'log',evt,log_center,E,a)
-        i+=1
-        if(i%1000==0): print i
+                writecluster(col, 'sqr', cf_name, evt,sqr_center, E, cluster_size)
+                #log
+                alist = [1.0,2.0,4.0]
+                for a in alist:
+                    log_center = log_pos(cluster,a=a)
+                    writecluster(col, 'log', cf_name, evt,log_center, E, cluster_size, a)
+                i+=1
+                if(i%1000==0): print i
     print 'creating index'
     col.create_index([('alg',pymongo.ASCENDING),('a',pymongo.ASCENDING)])
 

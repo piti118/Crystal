@@ -39,7 +39,10 @@ class Shape:
     def draw(self,ctx,xycenter,width,color,alpha):
         corners = self.corners(xycenter,width)
         return draw_poly(ctx,corners,color,alpha)
-
+    def adj(self,center):
+        ring,ringno=self.ring(1,center)
+        ring.pop(0)
+        return ring
 hex_ring_step = (1,0)
 hex_move_list = [(0,1),(-1,0),(-1,-1),(0,-1),(1,0),(1,1)]
 hex_side_size = lambda x: x+1 #this measure how many step we should walk
@@ -51,6 +54,47 @@ sq_move_list = [(0,-1),(-1,0),(0,1),(1,0)]
 sq_side_size = lambda x: 2*x + 1
 sq_lk2xy = lambda lk,scale=1.0: lk2xy(lk,scale,0,pi/2)
 SquareShape = Shape(4,sq_ring_step,sq_move_list,sq_side_size,sq_lk2xy)
+traverse_depth_max = 1000 # don't traverse more than this
+def traverse(start,shape,f,acc=None,history=None):
+    if acc is None: acc = []
+    if history is None: history = set()
+    #this line is mainly for first call
+    history.add(start) #note for set adding duplicate will do nothing
+    if f(start):
+        acc.append(start)
+        adjs = shape.adj(start)
+        #filter out adj in history
+        adjs = filter(lambda x: x not in history,adjs)
+        #add all adj to history to make sure it doesn't get considered again
+        for adj in adjs:
+            history.add(adj)
+        for adj in adjs: #for all adjacent
+            if len(history)>200: raise Exception("traverse too dep")
+            traverse(adj,shape,f,acc,history)
+    else:
+        pass
+    
+    return acc
+    
+def cluster_expansion(clist,shape,minE=0,cutoff=0.01):
+    #a more advance cluster finding algorithm where it find the bump
+    #and them traverse(recursively) the adjacent crystal to find 
+    #bump that is more than certain percent of the highest bump
+    bump = find_bump(clist)
+    #index it
+    cmap = { (x['l'],x['k']):x for x in clist }
+    seed = (bump['l'],bump['k'])
+    ebump = bump['dedx']
+    def f(lk):
+        if cmap.has_key(lk):
+            crys = cmap[lk]
+            return crys['dedx'] > minE and crys['dedx'] > cutoff*ebump
+        else:
+            return False #out of bound
+    ringset = set(traverse(seed,shape,f))
+    toReturn = filter(lambda x: tuple([x['l'],x['k']]) in ringset,clist)
+    return toReturn
+    
 
 #return list of l and k for ring size of ringsize and center at center and list of ring no
 def ring(center, ringsize, move_list,side_size,ring_step):
@@ -82,11 +126,12 @@ def find_bump(clist):
     return max(clist,key=lambda x:x['dedx'])
     pass
 
-def find_cluster(clist,ring,ringsize=1):
+def ring_cluster(clist,shape,ringsize=2):
     #return list of crystal to be used in cluster finding
+    #this is a very simple where it find a bump and them expand around it for 2 rings
     bump = find_bump(clist) #find crystal with highest dedx
     bump_center = tuple([bump['l'],bump['k']])
-    ringset = set(ring(bump_center,ringsize)[0])
+    ringset = set(shape.ring(ringsize,bump_center)[0])
     #note: ignoring out of bound ring
     toReturn = filter(lambda x: tuple([x['l'],x['k']]) in ringset,clist)
     return toReturn
