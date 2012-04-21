@@ -76,7 +76,7 @@ def traverse(start,shape,f,acc=None,history=None):
     
     return acc
     
-def cluster_expansion(clist,shape,minE=0,cutoff=0.01):
+def cluster_expansion(clist,shape,minE=0,cutoff=0.0001):
     #a more advance cluster finding algorithm where it find the bump
     #and them traverse(recursively) the adjacent crystal to find 
     #bump that is more than certain percent of the highest bump

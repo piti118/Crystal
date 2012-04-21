@@ -81,7 +81,7 @@ def fitgaussx2(data,nbins=50,mu=None,sigma=None,range_=None,errors=None):
         except minuit.MinuitError as me:
             fail=True
 
-        if m.fval>10.0: 
+        if m.fval>30.0: 
             print 'fval: ',m.fval
             fail=True
         if fail:
@@ -230,6 +230,9 @@ def find_hmp(h,edges,step=1):
     found = False
     while(True):
         thisindex+=step
+        if thisindex>=len(h) or thisindex<0:
+            found = False
+            break;
         if h[thisindex]<maxvalue/2.0:
             found =True
             #find the slope to extrapolate
@@ -244,7 +247,9 @@ def find_hmp(h,edges,step=1):
             hmp = (maxvalue/2.0-h[thisindex])/slope + thismidpoint
             break;
     #careful of case where it walks out of bound 
-    assert(found)
+    #assert(found)
+    if not found:
+        hmp = edges[0] if step>0 else edges[-1]
     return hmp
 
 def fwhm(h,edges):
